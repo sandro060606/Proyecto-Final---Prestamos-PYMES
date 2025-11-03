@@ -14,6 +14,9 @@ exports.crearCliente = async (req, res) => {
             clienteId: result.insertId
         });
     }catch(e){
+        if(e.code === "ER_DUP_ENTRY"){
+            return res.status(400).json({error: 'DNI esta duplicado'})
+        }
         console.error(e);
         res.status(500).json({message: 'Error interno del servidor'});
     }
