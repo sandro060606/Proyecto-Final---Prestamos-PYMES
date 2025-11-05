@@ -17,12 +17,13 @@ exports.crearPrestamo = async (req, res) => {
   try {
     const {
       prestamo,
-      pagototal,
       fechaprestamo,
       estado,
       id_cliente,
     } = req.body;
     const letracambio = req.file ? `/uploads/prestamos/${req.file.filename}` : null;
+    const monto = parseFloat(prestamo);
+    const pagototal = monto + (monto * 0.10); // Agregar 10% de interés
     const [result] = await db.query(
       "INSERT INTO prestamos (prestamo,pagototal,fechaprestamo ,letracambio, estado, id_cliente) VALUES (?, ?, ?, ?, ?, ?)",
       [prestamo, pagototal, fechaprestamo, letracambio, estado, id_cliente]
@@ -55,20 +56,24 @@ exports.listaPrestamosporId = async (req, res) => {
 
 exports.actualizarPrestamo = async (req, res) => {
   const { id_prestamo } = req.params;
-  const { prestamo, pagototal, fechaprestamo, estado, id_cliente } = req.body;
+  const { prestamo, fechaprestamo, estado, id_cliente } = req.body;
   const nuevaLetraCambio = req.file ? `/uploads/prestamos/${req.file.filename}`    : null;
 
   let sqlParts = [];
   let values = [];
 
+  //Si un nuevo valor de Prestamo es Enviado
   if (prestamo != undefined) {
-    sqlParts.push("prestamo = ?");
-    values.push(prestamo);
-  }
-  if (pagototal != undefined) {
-    sqlParts.push("pagototal = ?");
-    values.push(pagototal);
-  }
+      const monto = parseFloat(prestamo);
+      // Se Calcula el nuevo pagototal con el 10% de interés
+      const pagototalCalculado = monto + (monto * 0.10); 
+      //Prestamo
+      sqlParts.push("prestamo = ?");
+      values.push(prestamo);
+      //Pago Total
+      sqlParts.push("pagototal = ?");
+      values.push(pagototalCalculado);
+    }
   if (fechaprestamo != undefined) {
     sqlParts.push("fechaprestamo = ?");
     values.push(fechaprestamo);
