@@ -17,12 +17,13 @@ exports.crearPrestamo = async (req, res) => {
   try {
     const {
       prestamo,
-      pagototal,
       fechaprestamo,
       estado,
       id_cliente,
     } = req.body;
     const letracambio = req.file ? `/uploads/prestamos/${req.file.filename}` : null;
+    const monto = parseFloat(prestamo);
+    const pagototal = monto + (monto * 0.10); // Agregar 10% de interés
     const [result] = await db.query(
       "INSERT INTO prestamos (prestamo,pagototal,fechaprestamo ,letracambio, estado, id_cliente) VALUES (?, ?, ?, ?, ?, ?)",
       [prestamo, pagototal, fechaprestamo, letracambio, estado, id_cliente]
