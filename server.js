@@ -45,8 +45,8 @@ app.get('/clientes/clientesListaId', (req, res) => {
 app.get('/prestamos', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'html/prestamos/prestamos.html'))
 })
-app.get('/prestamos/prestamosListaId', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'html/prestamos/prestamosId.html'))
+app.get('/prestamos/prestamosLista', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'html/prestamos/prestamoslista.html'))
 })
 app.get('/pagos', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'html/pagos/pagos.html'))

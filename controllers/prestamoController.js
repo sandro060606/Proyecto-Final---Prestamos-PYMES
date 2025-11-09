@@ -3,7 +3,7 @@ const path = require("path");
 
 exports.listaPrestamos = async (req, res) => {
   const sql =
-    "SELECT CONCAT(cli.nombre, ' ', cli.apellido) AS cliente, pre.id_prestamo AS Numero_Prestamo, pre.prestamo, pre.pagototal, pre.fechaprestamo, pre.estado, pre.letracambio FROM clientes cli INNER JOIN prestamos pre ON cli.id_cliente = pre.id_cliente";
+  "SELECT CONCAT(cli.nombre, ' ', cli.apellido) AS cliente, cli.numerodocumento AS cliente_dni, pre.id_prestamo AS Numero_Prestamo, pre.prestamo, pre.pagototal, pre.fechaprestamo, pre.estado, pre.letracambio FROM clientes cli INNER JOIN prestamos pre ON cli.id_cliente = pre.id_cliente";
   try {
     const [prestamos] = await db.query(sql);
     res.status(200).json(prestamos);

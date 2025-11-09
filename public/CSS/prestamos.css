@@ -1,0 +1,51 @@
+.container {
+  max-width: 1300px;
+}
+
+.hidden {
+  display: none !important;
+}
+
+#tablaPrestamos thead th {
+  font-size: 1.05rem;
+  padding: 0.75rem 0.5rem;
+  vertical-align: middle;
+}
+
+#tablaPrestamos tbody td {
+  vertical-align: middle;
+}
+
+#formPrestamo {
+  padding: 25px;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.modo-edicion {
+  background: #fff3cd;
+  color: #856404;
+  padding: 15px;
+  border-radius: 6px;
+  border: 1px solid #ffeeba;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+#historialCliente table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.estado-pagado {
+  color: #28a745;
+  font-weight: bold;
+}
+
+.estado-pendiente {
+  color: #ffc107;
+  font-weight: bold;
+}
