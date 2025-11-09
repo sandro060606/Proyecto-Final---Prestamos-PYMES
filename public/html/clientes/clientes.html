@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Clientes</title>
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="CSS/index.css" />
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+    <!-- Iconos Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+      referrerpolicy="no-referrer"
+    />
+  </head>
+
+  <body class="bg-light d-flex flex-column min-vh-100">
+    <!-- Navegación principal -->
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+          <a class="navbar-brand d-flex align-items-center" href="/">
+            <img
+              src="images/logo_pymes.jpg"
+              alt="Logo de Préstamos Pymes"
+              width="32"
+              height="32"
+              class="me-2 rounded"
+            />
+            <span class="fw-semibold">Préstamos Pymes</span>
+          </a>
+
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Alternar navegación"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+              <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Sección principal -->
+      <section class="container py-5">
+        <!-- Título de la sección -->
+        <h1 class="text-center mb-4">Gestión de Clientes</h1>
+
+        <!-- Formulario para agregar nuevo cliente -->
+        <form id="formCliente" class="mb-5">
+          <div class="row">
+            <div class="col-12 col-md-6 mb-3">
+              <label for="nombre" class="form-label">Nombres</label>
+              <input type="text" class="form-control" id="nombre" placeholder="Nombres" required />
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+              <label for="apellido" class="form-label">Apellidos</label>
+              <input type="text" class="form-control" id="apellido" placeholder="Apellidos" required />
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+              <label for="tipoDocumento" class="form-label">Tipo de Documento</label>
+              <select class="form-control" id="tipoDocumento" required>
+                <option value="DNI">DNI</option>
+                <option value="RUC">RUC</option>
+                <option value="CE">Carné de Extranjería</option>
+              </select>
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+              <label for="numeroDocumento" class="form-label">Número de Documento</label>
+              <input type="text" class="form-control" id="numeroDocumento" placeholder="Número de Documento" required />
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+              <label for="telefono" class="form-label">Teléfono</label>
+              <input type="tel" class="form-control" id="telefono" placeholder="Teléfono" required />
+            </div>
+            <div class="col-12 col-md-6 mb-3">
+              <label for="direccion" class="form-label">Dirección</label>
+              <input type="text" class="form-control" id="direccion" placeholder="Dirección" required />
+            </div>
+            <div class="col-12 text-center">
+              <button type="submit" class="btn btn-primary">Guardar</button>
+              <button type="reset" class="btn btn-secondary">Cancelar</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- Tabla de clientes -->
+        <h3 class="text-center mb-4">Lista de Clientes</h3>
+        <div class="table-responsive">
+          <table class="table table-striped table-bordered">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th>Tipo Documento</th>
+                <th>N° Documento</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="clientesTable">
+              <!-- Aquí se agregarán los clientes de forma dinámica -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-dark text-white-50 py-3 mt-auto">
+      <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+        <span>&copy; <span id="currentYear"></span> Préstamos Pymes</span>
+        <span class="small">Panel de gestión para pequeñas y medianas empresas.</span>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Lógica para manejar el formulario y la tabla -->
+    <script src="JS/clientes.js"></script>
+  </body>
+</html>

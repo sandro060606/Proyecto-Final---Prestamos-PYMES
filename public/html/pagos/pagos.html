@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Pagos</title>
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="CSS/index.css" />
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body class="bg-light d-flex flex-column min-vh-100">
+    <!-- Navegación principal -->
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+          <a class="navbar-brand d-flex align-items-center" href="/">
+            <img
+              src="images/logo_pymes.jpg"
+              alt="Logo de Préstamos Pymes"
+              width="32"
+              height="32"
+              class="me-2 rounded"
+            />
+            <span class="fw-semibold">Préstamos Pymes</span>
+          </a>
+
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Alternar navegación"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+              <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+              <a class="nav-link" href="/clientes">Clientes</a>
+              <a class="nav-link" href="/prestamos">Préstamos</a>
+              <a class="nav-link" href="/pagos">Pagos</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Sección principal / formulario de pagos -->
+      <section class="container py-5">
+        <h1 class="text-center mb-4">Gestión de Pagos</h1>
+        
+        <div class="row">
+          <div class="col-12 col-md-6 mx-auto">
+            <h3 class="mb-3">Registro de Pagos</h3>
+            <form id="formPago">
+              <div class="mb-3">
+                <label for="clienteSelect" class="form-label">Cliente</label>
+                <select class="form-select" id="clienteSelect" required>
+                  <option value="">Seleccionar Cliente</option>
+                  <!-- Las opciones se generarán dinámicamente -->
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="prestamoSelect" class="form-label">Número de Prestamo</label>
+                <select class="form-select" id="prestamoSelect" required>
+                  <option value="">Seleccionar Número de Prestamo</option>
+                  <!-- Las opciones se generarán dinámicamente -->
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="fechaPago" class="form-label">Fecha de Pago</label>
+                <input type="date" class="form-control" id="fechaPago" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="tipoPago" class="form-label">Tipo de Pago (Ej: Yape / Efectivo)</label>
+                <input type="text" class="form-control" id="tipoPago" placeholder="Yape / Efectivo" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="montoPagado" class="form-label">Monto Pagado</label>
+                <input type="number" class="form-control" id="montoPagado" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="montoRestante" class="form-label">Monto Restante</label>
+                <input type="number" class="form-control" id="montoRestante" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="evidencia" class="form-label">Evidencia</label>
+                <input type="file" class="form-control" id="evidencia" />
+              </div>
+
+              <div class="text-center">
+                <button type="submit" class="btn btn-success">Guardar</button>
+                <button type="button" class="btn btn-secondary" id="cancelarBtn">Cancelar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Tabla de pagos -->
+        <div class="table-responsive mt-5">
+          <h3 class="text-center mb-4">Lista de Pagos</h3>
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Cliente</th>
+                <th>N° Prestamo</th>
+                <th>Fecha</th>
+                <th>Tipo de Pago</th>
+                <th>Monto Pagado</th>
+                <th>Monto Restante</th>
+                <th>Estado</th>
+                <th>Evidencia</th>
+                <th>Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="resultadosPagos">
+              <!-- Las filas se llenarán dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-dark text-white-50 py-3 mt-auto">
+      <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+        <span>&copy; <span id="currentYear"></span> Préstamos Pymes</span>
+        <span class="small">Panel de gestión para pequeñas y medianas empresas.</span>
+      </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- Lógica específica de pagos -->
+    <script src="JS/pagos.js"></script>
+    <script>
+      document.getElementById("currentYear").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
