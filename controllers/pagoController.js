@@ -17,21 +17,31 @@ exports.crearPago = async (req, res) => {
         const { tipopago, fechapago, montopagado, id_prestamo } = req.body; 
         const evidencia = req.file ? `/uploads/pagos/${req.file.filename}` : null;
         const [data] = await db.query(
-            `SELECT  pre.pagototal, SUM(COALESCE(pag.montopagado, 0)) AS totalYaPagado FROM prestamos pre LEFT JOIN pagos pag ON pre.id_prestamo = pag.id_prestamo WHERE  pre.id_prestamo = ? GROUP BY pre.id_prestamo;`,
+            //Consulta para Obtener el Monto Total a Devolver / y el Monto Pagado hasta el momento
+            `SELECT  pre.pagototal, SUM(pag.montopagado) AS totalYaPagado FROM prestamos pre LEFT JOIN pagos pag ON pre.id_prestamo = pag.id_prestamo WHERE  pre.id_prestamo = ? GROUP BY pre.id_prestamo;`,
             [id_prestamo]
         );
         if (data.length === 0) {
             return res.status(404).json({ mensaje: "El ID de préstamo no existe." });
-        }     
-        const { pagototal: montoTotalDeuda, totalYaPagado } = data[0];
+        }
+        //Se Destructura Objetos y se Asigna a la constante     
+        const { pagototal: montoTotalDeuda, totalYaPagado } = data[0]; // pagototal: montoTotalDeuda, Asigna nuevo nombre a Pago Total
+        //Se calcula el Monto Restante
         const nuevoTotalPagado = parseFloat(totalYaPagado) + parseFloat(montopagado);
         let nuevoMontoRestante = parseFloat(montoTotalDeuda) - nuevoTotalPagado;
-        if (nuevoMontoRestante < 0) nuevoMontoRestante = 0.00; 
-        const estadoPago = (nuevoMontoRestante === 0) ? 'Pagado' : 'Vigente';
+        if (nuevoMontoRestante < 0) nuevoMontoRestante = 0.00;
+        //Se asigna el estado a la variable para insertarla en el pago 
+        let estadoPago
+        if(nuevoMontoRestante === 0){
+            estadoPago = 'Pagado';
+        }else{
+            estadoPago = 'Vigente';
+        }
         const [result] = await db.query(
             "INSERT INTO pagos (tipopago, fechapago, montopagado, montorestante, id_prestamo, estado, evidencia) VALUES (?, ?, ?, ?, ?, ?, ?)",
             [tipopago, fechapago, montopagado, nuevoMontoRestante, id_prestamo, estadoPago, evidencia]
         );
+        //Si el estado del Pago es Pagado se Actualiza la tabla Prestamos su estado
         if (estadoPago === 'Pagado') {
             await db.query(
                 "UPDATE prestamos SET estado = 'Pagado' WHERE id_prestamo = ?",

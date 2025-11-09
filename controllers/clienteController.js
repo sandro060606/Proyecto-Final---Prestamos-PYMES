@@ -8,7 +8,7 @@ exports.crearCliente = async (req, res) => {
     }
     const sql = 'INSERT INTO clientes (nombre, apellido,tipodocumento,numerodocumento,telefono,direccion) VALUES (?,?,?,?,?,?)';
     try{
-        const [result] = await db.execute(sql, [nombre, apellido, tipodocumento, numerodocumento, telefono, direccion]);
+        const [result] = await db.query(sql, [nombre, apellido, tipodocumento, numerodocumento, telefono, direccion]);
         res.status(201).json({
             message: 'Cliente Creado Correctamente',
             clienteId: result.insertId
@@ -39,7 +39,7 @@ exports.listarClientesPorId = async (req, res) => {
     const {id_cliente} = req.params;
     const sql = "SELECT id_cliente, nombre, apellido, tipodocumento, numerodocumento, telefono, direccion FROM clientes WHERE id_cliente = ?";
     try{
-        const [cliente] = await db.execute(sql, [id_cliente]);
+        const [cliente] = await db.query(sql, [id_cliente]);
         if(cliente.length === 0){
             return res.status(404).json({message: 'Cliente no encontrado'});
         }
@@ -105,7 +105,7 @@ exports.eliminarCliente = async (req, res) => {
     const {id_cliente} = req.params;
     const sql = "DELETE FROM clientes WHERE id_cliente = ?";
     try{
-        const [result] = await db.execute(sql, [id_cliente]);
+        const [result] = await db.query(sql, [id_cliente]);
         if(result.affectedRows === 0){
             return res.status(404).json({message: 'Cliente no encontrado'});
         }
