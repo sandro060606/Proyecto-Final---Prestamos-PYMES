@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gestión de Préstamos</title>
+    <!-- Estilos propios -->
+    <link rel="stylesheet" href="CSS/index.css" />
+    <!-- Bootstrap 5 -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+  </head>
+  <body class="bg-light d-flex flex-column min-vh-100">
+    <!-- Navegación principal -->
+    <header>
+      <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+          <a class="navbar-brand d-flex align-items-center" href="/">
+            <img
+              src="images/logo_pymes.jpg"
+              alt="Logo de Préstamos Pymes"
+              width="32"
+              height="32"
+              class="me-2 rounded"
+            />
+            <span class="fw-semibold">Préstamos Pymes</span>
+          </a>
+
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Alternar navegación"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+              <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+              <a class="nav-link" href="/clientes">Clientes</a>
+              <a class="nav-link" href="/prestamos">Préstamos</a>
+              <a class="nav-link" href="/pagos">Pagos</a>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Sección de Gestión de Préstamos -->
+      <section class="container py-5">
+        <h1 class="text-center mb-4">Gestión de Préstamos</h1>
+        
+        <!-- Formulario de nuevo préstamo -->
+        <form id="formPrestamo">
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="clienteSelect" class="form-label">Cliente</label>
+              <select id="clienteSelect" class="form-select">
+                <option selected>Seleccionar Cliente</option>
+                <!-- Aquí debes rellenar con los clientes desde la base de datos -->
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label for="montoInput" class="form-label">Monto</label>
+              <input type="number" id="montoInput" class="form-control" placeholder="Monto requerido" />
+            </div>
+            <div class="col-md-4">
+              <label for="fechaPrestamoInput" class="form-label">Fecha del Préstamo</label>
+              <input type="date" id="fechaPrestamoInput" class="form-control" />
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label for="amortizacionInput" class="form-label">Amortización (Devolver con interés)</label>
+              <input type="number" id="amortizacionInput" class="form-control" placeholder="Monto con intereses" />
+            </div>
+            <div class="col-md-4">
+              <label for="letraCambioInput" class="form-label">Letra de Cambio (PDF)</label>
+              <input type="file" id="letraCambioInput" class="form-control" />
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end">
+            <button type="submit" class="btn btn-primary">Guardar</button>
+            <button type="reset" class="btn btn-secondary ms-2">Cancelar</button>
+          </div>
+        </form>
+
+        <!-- Tabla de préstamos -->
+        <h3 class="text-center my-5">Lista de Préstamos</h3>
+        <div class="table-responsive">
+          <table class="table table-striped">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Cliente</th>
+                <th>Monto</th>
+                <th>Amortización</th>
+                <th>Fecha Préstamo</th>
+                <th>Estado</th>
+                <th>Letra Cambio</th>
+                <th>Acción</th>
+              </tr>
+            </thead>
+            <tbody id="tablaPrestamos">
+              <!-- Aquí se llenarán los préstamos con JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <footer class="bg-dark text-white-50 py-3 mt-auto">
+      <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+        <span>&copy; <span id="currentYear"></span> Préstamos Pymes</span>
+        <span class="small">Panel de gestión para pequeñas y medianas empresas.</span>
+      </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Lógica específica para la gestión de préstamos -->
+    <script src="JS/prestamos.js"></script>
+    
+    <script>
+      // Mantiene el año del footer siempre actualizado
+      document.getElementById("currentYear").textContent = new Date().getFullYear();
+    </script>
+  </body>
+</html>
