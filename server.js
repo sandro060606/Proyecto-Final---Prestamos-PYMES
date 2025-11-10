@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
 app.get('/clientes', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'html/clientes/clientes.html'))
 })
-app.get('/clientes/clientesListaId', (req, res) => {
+app.get('/clientes/clientesId', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'html/clientes/clientesId.html'))
 })
 app.get('/prestamos', (req, res) => {

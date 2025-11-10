@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestión de Clientes</title>
-    <!-- Estilos propios -->
-    <link rel="stylesheet" href="CSS/index.css" />
-    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="/CSS/clientes.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -30,16 +28,16 @@
     <!-- Navegación principal -->
     <header>
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-          <a class="navbar-brand d-flex align-items-center" href="/">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">
             <img
-              src="images/logo_pymes.jpg"
-              alt="Logo de Préstamos Pymes"
-              width="32"
-              height="32"
-              class="me-2 rounded"
+              src="/images/logo_pymes.jpg"
+              alt="Logo Pymes"
+              width="30"
+              height="24"
+              class="d-inline-block align-text-top"
             />
-            <span class="fw-semibold">Préstamos Pymes</span>
+            <span style="font-size: 1.25rem"> Préstamos Pymes</span>
           </a>
 
           <button
@@ -49,14 +47,20 @@
             data-bs-target="#navbarNavAltMarkup"
             aria-controls="navbarNavAltMarkup"
             aria-expanded="false"
-            aria-label="Alternar navegación"
+            aria-label="Toggle navigation"
           >
             <span class="navbar-toggler-icon"></span>
           </button>
 
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ms-auto">
-              <a class="nav-link active" aria-current="page" href="/">Inicio</a>
+              <a class="nav-link" href="/">Home</a>
+              <a class="nav-link" href="/clientes">Gestion Clientes</a>
+              <a class="nav-link active" href="/clientes/clientesId"
+                >Busqueda Clientes</a
+              >
+            </div>
+          </div>
         </div>
       </nav>
     </header>
@@ -69,17 +73,32 @@
 
         <!-- Formulario para agregar nuevo cliente -->
         <form id="formCliente" class="mb-5">
+          <input type="hidden" id="idcliente" />
           <div class="row">
             <div class="col-12 col-md-6 mb-3">
               <label for="nombre" class="form-label">Nombres</label>
-              <input type="text" class="form-control" id="nombre" placeholder="Nombres" required />
+              <input
+                type="text"
+                class="form-control"
+                id="nombre"
+                placeholder="Nombres"
+                required
+              />
             </div>
             <div class="col-12 col-md-6 mb-3">
               <label for="apellido" class="form-label">Apellidos</label>
-              <input type="text" class="form-control" id="apellido" placeholder="Apellidos" required />
+              <input
+                type="text"
+                class="form-control"
+                id="apellido"
+                placeholder="Apellidos"
+                required
+              />
             </div>
             <div class="col-12 col-md-6 mb-3">
-              <label for="tipoDocumento" class="form-label">Tipo de Documento</label>
+              <label for="tipoDocumento" class="form-label"
+                >Tipo de Documento</label
+              >
               <select class="form-control" id="tipoDocumento" required>
                 <option value="DNI">DNI</option>
                 <option value="RUC">RUC</option>
@@ -87,20 +106,40 @@
               </select>
             </div>
             <div class="col-12 col-md-6 mb-3">
-              <label for="numeroDocumento" class="form-label">Número de Documento</label>
-              <input type="text" class="form-control" id="numeroDocumento" placeholder="Número de Documento" required />
+              <label for="numeroDocumento" class="form-label"
+                >Número de Documento</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                id="numeroDocumento"
+                placeholder="Número de Documento"
+                required
+              />
             </div>
             <div class="col-12 col-md-6 mb-3">
               <label for="telefono" class="form-label">Teléfono</label>
-              <input type="tel" class="form-control" id="telefono" placeholder="Teléfono" required />
+              <input
+                type="tel"
+                class="form-control"
+                id="telefono"
+                placeholder="Teléfono"
+                required
+              />
             </div>
             <div class="col-12 col-md-6 mb-3">
               <label for="direccion" class="form-label">Dirección</label>
-              <input type="text" class="form-control" id="direccion" placeholder="Dirección" required />
+              <input
+                type="text"
+                class="form-control"
+                id="direccion"
+                placeholder="Dirección"
+                required
+              />
             </div>
-            <div class="col-12 text-center">
-              <button type="submit" class="btn btn-primary">Guardar</button>
-              <button type="reset" class="btn btn-secondary">Cancelar</button>
+            <div class="col-12">
+              <button type="submit" class="btn btn-primary" id="btnGuardar">Guardar</button>
+              <button type="reset" class="btn btn-secondary" id="btnCancelar">Cancelar</button>
             </div>
           </div>
         </form>
@@ -130,23 +169,20 @@
     </main>
 
     <footer class="bg-dark text-white-50 py-3 mt-auto">
-      <div class="container d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+      <div
+        class="container d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2"
+      >
         <span>&copy; <span id="currentYear"></span> Préstamos Pymes</span>
-        <span class="small">Panel de gestión para pequeñas y medianas empresas.</span>
+        <span class="small"
+          >Panel de gestión para pequeñas y medianas empresas.</span
+        >
       </div>
     </footer>
-
-    <!-- Bootstrap JS -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
 
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <!-- Lógica para manejar el formulario y la tabla -->
-    <script src="JS/clientes.js"></script>
+    <script src="JS/clientes/clientes.js"></script>
   </body>
 </html>
