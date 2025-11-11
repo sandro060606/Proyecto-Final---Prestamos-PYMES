@@ -1,6 +1,3 @@
-/* ==================================== */
-/* 0. Estilos Generales y Tipografía */
-/* ==================================== */
 :root {
   --primary-color: #0d6efd;
   --secondary-color: #6c757d;
@@ -11,11 +8,6 @@
   --dark-text: #343a40;
 }
 
-/* * APLICACIÓN DE STICKY FOOTER 
- * 1. Establece el body para que ocupe toda la altura de la ventana (100vh).
- * 2. Usa flexbox para organizar los elementos (navbar, main, footer) en columna.
- * 3. Permite que el contenido principal (<main>) crezca y empuje el footer hacia abajo.
- */
 html,
 body {
   height: 100%;
@@ -25,59 +17,22 @@ body {
 body {
   font-family: "Arial", sans-serif;
   color: var(--dark-text);
-  display: flex; /* Habilitar flexbox para el cuerpo */
-  flex-direction: column; /* Apilar elementos en columna */
+  display: flex;
+  flex-direction: column;
 }
 
-/* El main debe crecer para ocupar el espacio restante y empujar el footer */
 main {
   flex-grow: 1;
-  padding-top: 20px; /* Añadir espacio arriba del contenido */
-  padding-bottom: 20px; /* Añadir espacio antes del footer */
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
-/* Títulos y Encabezados */
 h1,
 h3 {
   color: var(--primary-color);
   font-weight: 600;
 }
 
-/* ==================================== */
-/* 1. Estilos de la Navegación (Navbar) */
-/* ==================================== */
-.navbar-brand span {
-  font-weight: 700;
-}
-
-/* Asegura que el color por defecto en el navbar oscuro sea blanco */
-.navbar-dark .navbar-nav .nav-link {
-  color: var(--white);
-  transition: background-color 0.3s;
-}
-
-/* CORRECCIÓN FINAL: Estilo para el enlace activo (resaltado blanco/claro) */
-.navbar-nav .nav-link.active {
-  background-color: rgba(
-    255,
-    255,
-    255,
-    0.2
-  ); /* Fondo blanco muy sutil (20% opacidad) */
-  color: var(--white) !important;
-  font-weight: bold;
-  border-radius: 5px;
-  /* Para que el resaltado se vea */
-}
-/* Al pasar el mouse también se puede resaltar */
-.navbar-dark .navbar-nav .nav-link:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  border-radius: 5px;
-}
-
-/* ==================================== */
-/* 2. Estilos del Formulario de Gestión (clientes.html) */
-/* ==================================== */
 #formCliente {
   background-color: var(--white);
   padding: 30px;
@@ -101,16 +56,12 @@ h3 {
   background-color: #0b5ed7;
 }
 
-/* ==================================== */
-/* 3. Estilos de las Tablas (Gestión y Búsqueda) */
-/* ==================================== */
 .table-responsive {
   border: 1px solid #dee2e6;
   border-radius: 6px;
   overflow: hidden;
 }
 
-/* Fondo de la cabecera de la tabla a Azul Primario */
 .table thead th {
   background-color: var(--primary-color);
   color: var(--white);
@@ -128,7 +79,6 @@ h3 {
   font-weight: bold;
 }
 
-/* Botones dentro de la columna Acción */
 .table .btn-sm {
   padding: 0.25rem 0.5rem;
   font-size: 0.875rem;
@@ -137,34 +87,24 @@ h3 {
   margin: 2px;
 }
 
-/* ==================================== */
-/* 4. Estilos de Búsqueda (clientesId.html) */
-/* ==================================== */
 
-/* Estilo para el contenedor del formulario de búsqueda */
 .card-header.bg-primary {
   background-color: var(--primary-color) !important;
 }
 
-/* Oculta la etiqueta de Bootstrap que estaba dando problemas en clientesId.html */
 #clienteIdLabel {
   display: none;
 }
 
-/* ==================================== */
-/* 5. Estilos del Pie de Página (Footer) */
-/* ==================================== */
 footer {
-  /* Estas propiedades ya no son tan necesarias con el "Sticky Footer" de Flexbox, */
-  /* pero las mantengo para control de padding y fondo. */
-  background-color: var(--dark-text); /* El footer tiene fondo oscuro */
+  background-color: var(--dark-text);
   color: var(--white);
   padding-top: 20px;
   padding-bottom: 20px;
-  width: 100%; /* Asegura que ocupe todo el ancho */
+  width: 100%;
   text-align: center;
 }
 
 footer a {
-  color: var(--info-color); /* Estilo para enlaces en el footer */
+  color: var(--info-color);
 }

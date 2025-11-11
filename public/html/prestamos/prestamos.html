@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Gestion de Prestamos</title>
     <link rel="stylesheet" href="/CSS/prestamos.css" />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -47,11 +48,9 @@
           <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav ms-auto">
               <a class="nav-link" href="/">Home</a>
-
               <a class="nav-link active" aria-current="page" href="/prestamos"
                 >Gestion Prestamos</a
               >
-
               <a class="nav-link" href="/prestamos/prestamoslista"
                 >Lista Prestamos</a
               >
@@ -76,11 +75,11 @@
 
               <div class="row g-2 mb-3">
                 <div class="col-md-6">
-                  <label for="id_cliente" class="form-label fw-bold"
-                    >Cliente *</label
+                  <label for="lista_clientes" class="form-label fw-bold"
+                    >Cliente</label
                   >
                   <select
-                    id="id_cliente"
+                    id="lista_clientes"
                     name="id_cliente"
                     class="form-select"
                     required
@@ -105,23 +104,15 @@
 
               <div class="row g-3 mb-3">
                 <div class="col-md-6">
-                  <label
-                    for="pagototal_input"
-                    class="form-label fw-bold text-success"
+                  <label for="pagototal" class="form-label fw-bold text-success"
                     >Total a Pagar (10% de interés/"Automático")</label
                   >
                   <input
                     type="text"
-                    id="pagototal_input"
-                    name="pagototal_input"
-                    class="form-control fw-bold fs-5 text-success"
-                    disabled
-                  />
-                  <input
-                    type="hidden"
-                    id="pagototal_valor"
+                    id="pagototal"
                     name="pagototal"
-                    value="0.00"
+                    class="form-control"
+                    disabled
                   />
                 </div>
                 <div class="col-md-6">
@@ -137,54 +128,47 @@
                   />
                 </div>
               </div>
-              <div class="mb-4">
-                <label for="letracambio" class="form-label fw-bold">
-                  Letra de Cambio (PDF) *
-                </label>
-                <input
-                  type="file"
-                  id="letracambio"
-                  name="letracambio"
-                  accept=".pdf"
-                  class="form-control"
-                  required
-                />
-                <div id="pdfActual" class="mt-2 hidden">
-                  <small>
-                    <i class="fas fa-file-pdf me-1"></i> Archivo actual:
-                    <a
-                      id="linkPdfActual"
-                      href="#"
-                      target="_blank"
-                      class="text-primary fw-bold"
-                      >Ver PDF</a
-                    >
-                  </small>
+              <div class="row g-3 mb-3">
+                <div class="col-md-6">
+                  <label for="estadoprestamo" class="form-label fw-bold"
+                    >Estado del Préstamo</label
+                  >
+                  <input
+                    type="text"
+                    id="estadoprestamo"
+                    name="estadoprestamo"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label for="letracambio" class="form-label fw-bold">
+                    Letra de Cambio (PDF) *
+                  </label>
+                  <input
+                    type="file"
+                    id="letracambio"
+                    name="letracambio"
+                    accept=".pdf"
+                    class="form-control"
+                    required
+                  />
                 </div>
               </div>
             </form>
           </div>
           <div class="card-footer text-end">
             <button
-              type="reset"
-              class="btn btn-outline-secondary me-2"
-              form="formPrestamo"
-              id="btnCancelarForm"
-            >
-              <i class="fas fa-times-circle"></i> Cancelar
-            </button>
-
-            <button
               type="submit"
               form="formPrestamo"
-              id="btnSubmit"
+              id="btnGuardar"
               class="btn btn-success"
             >
               <i class="fas fa-check-circle"></i> Crear Préstamo
             </button>
           </div>
         </div>
-        <div id="historialCliente" class="card shadow-sm hidden">
+        <div id="historialCliente" class="card shadow-sm">
           <div class="card-header bg-secondary text-white">
             <i class="fas fa-chart-line me-2"></i
             ><strong>Historial de Préstamos del Cliente:</strong>
@@ -192,7 +176,10 @@
           </div>
           <div class="card-body p-0">
             <div class="table-responsive">
-              <table class="table table-striped table-hover m-0">
+              <table
+                class="table table-striped table-hover m-0"
+                id="tabla-prestamos"
+              >
                 <thead class="bg-light">
                   <tr>
                     <th>N° Préstamo</th>
@@ -203,7 +190,9 @@
                     <th>Acciones</th>
                   </tr>
                 </thead>
-                <tbody id="tablaPrestamosCliente"></tbody>
+                <tbody>
+                  <!-- Filas de Prestamos -->
+                </tbody>
               </table>
             </div>
           </div>
@@ -211,4 +200,5 @@
       </div>
     </main>
   </body>
+  <script src="/JS/prestamos/prestamos.js"></script>
 </html>

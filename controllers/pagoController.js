@@ -18,7 +18,7 @@ exports.crearPago = async (req, res) => {
         const evidencia = req.file ? `/uploads/pagos/${req.file.filename}` : null;
         const [data] = await db.query(
             //Consulta para Obtener el Monto Total a Devolver / y el Monto Pagado hasta el momento
-            `SELECT  pre.pagototal, SUM(pag.montopagado) AS totalYaPagado FROM prestamos pre LEFT JOIN pagos pag ON pre.id_prestamo = pag.id_prestamo WHERE  pre.id_prestamo = ? GROUP BY pre.id_prestamo;`,
+            `SELECT  pre.pagototal, COALESCE(SUM(pag.montopagado), 0) AS totalYaPagado FROM prestamos pre LEFT JOIN pagos pag ON pre.id_prestamo = pag.id_prestamo WHERE  pre.id_prestamo = ? GROUP BY pre.id_prestamo;`,
             [id_prestamo]
         );
         if (data.length === 0) {

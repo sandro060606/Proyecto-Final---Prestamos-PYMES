@@ -25,8 +25,6 @@ async function obtenerClientes() {
 
   clientes.forEach((cliente) => {
     const row = tabla.insertRow();
-
-    // Celdas según la estructura de tu tabla (9 columnas incluyendo Acción)
     row.insertCell().textContent = cliente.id_cliente;
     row.insertCell().textContent = cliente.nombre;
     row.insertCell().textContent = cliente.apellido;
@@ -38,22 +36,18 @@ async function obtenerClientes() {
     const actionCell = row.insertCell();
     actionCell.classList.add("text-center");
 
-    // Botón 1: Editar
     const editButton = document.createElement("button");
     editButton.textContent = "Editar";
     editButton.classList.add("btn", "btn-info", "btn-sm", "me-2");
     editButton.onclick = () => cargarParaEdicion(cliente);
 
-    // Botón 2: Eliminar
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Eliminar";
     deleteButton.classList.add("btn", "btn-danger", "btn-sm");
-    deleteButton.onclick = () =>
-      eliminarCliente(
+    deleteButton.onclick = () => eliminarCliente(
         cliente.id_cliente,
         cliente.nombre + " " + cliente.apellido
       );
-
     actionCell.appendChild(editButton);
     actionCell.appendChild(deleteButton);
   });
@@ -72,32 +66,25 @@ function cargarParaEdicion(cliente) {
 }
 
 async function eliminarCliente(id, nombreCompleto) {
-  Swal.fire({
+  const result = await Swal.fire({
     title: "¿Está seguro?",
     text: `Se eliminará el cliente: ${nombreCompleto}`,
     icon: "warning",
     showCancelButton: true,
-    confirmButtonColor: "#dc3545",
-    cancelButtonColor: "#6c757d",
     confirmButtonText: "Sí, eliminar",
     cancelButtonText: "Cancelar",
-  }).then(async (result) => {
-    if (result.isConfirmed) {
-      try {
-        const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-        const resultData = await response.json();
-        if (!response.ok) {
-          throw new Error(
-            resultData.message || "Error al eliminar el cliente."
-          );
-        }
-        Swal.fire("Eliminado", resultData.message, "success");
-        obtenerClientes();
-      } catch (e) {
-        console.error("Error al eliminar:", e);
-      }
-    }
   });
+  if (result.isConfirmed) {
+    try {
+      const response = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+      const resultData = await response.json();
+      Swal.fire("Eliminado", resultData.message, "success");
+      obtenerClientes();
+    } catch (e) {
+      console.error("Error al eliminar cliente:", e);
+      Swal.fire("Error", "No se pudo conectar con el servidor.", "error"); 
+    }
+  }
 }
 
 formulario.addEventListener("submit", async (event) => {
@@ -121,7 +108,6 @@ formulario.addEventListener("submit", async (event) => {
         body: JSON.stringify(data),
       });
     } else {
-      // SI NO hay ID (Crear - POST)
       response = await fetch(API_URL, {
         method: "post",
         headers: { "Content-Type": "application/json" },
@@ -134,13 +120,12 @@ formulario.addEventListener("submit", async (event) => {
 
     Swal.fire("Éxito", result.message, "success");
 
-
     btnGuardar.innerText = "Guardar";
     idcliente.value = "";
     formulario.reset();
     obtenerClientes();
   } catch (e) {
-    console.error("Error en el envío del formulario:", e);
+    console.error(e);
     Swal.fire("Error", e.message, "error");
   }
 });

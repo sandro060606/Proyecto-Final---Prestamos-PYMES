@@ -11,8 +11,6 @@ async function obtenerPrestamos() {
 
   prestamos.forEach((prestamo) => {
     const row = tablaBody.insertRow();
-    const montoFormat = parseFloat(prestamo.prestamo).toFixed(2);
-    const totalPagarFormat = parseFloat(prestamo.pagototal).toFixed(2);
     const fecha = new Date(prestamo.fechaprestamo).toLocaleDateString("es-PE");
 
     row.insertCell().textContent = prestamo.Numero_Prestamo;
@@ -22,6 +20,15 @@ async function obtenerPrestamos() {
     row.insertCell().textContent = prestamo.pagototal;
     row.insertCell().textContent = fecha;
     row.insertCell().textContent = prestamo.estado;
+    const pdfCell = row.insertCell();
+    pdfCell.classList.add("text-center");
+
+    const pdfButton = document.createElement("a");
+    pdfButton.textContent = "Ver PDF";
+    pdfButton.classList.add("btn", "btn-sm", "btn-info");
+    pdfButton.target = "_blank"; // Abrir en nueva pestaña
+    pdfButton.href = prestamo.letracambio;
+    pdfCell.appendChild(pdfButton);
   });
 
   totalRegistrosSpan.textContent = prestamos.length;

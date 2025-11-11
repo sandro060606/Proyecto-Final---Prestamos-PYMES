@@ -10,11 +10,8 @@ async function buscarClientes(event) {
   }
 
   const id_cliente = clienteId.value.trim();
-  let url = API_URL;
 
-  if (id_cliente !== "") {
-    url = `${API_URL}/${id_cliente}`;
-  }
+  const url = `${API_URL}/${id_cliente}`;
 
   try {
     const response = await fetch(url, { method: "GET" });
@@ -44,12 +41,6 @@ async function buscarClientes(event) {
 
 function renderizarTabla(clientes) {
   tablaResultados.innerHTML = "";
-
-  if (clientes.length === 0) {
-    tablaResultados.innerHTML =
-      '<tr><td colspan="7" class="text-center">No se encontraron clientes.</td></tr>';
-    return;
-  }
 
   clientes.forEach((cliente) => {
     const row = tablaResultados.insertRow();

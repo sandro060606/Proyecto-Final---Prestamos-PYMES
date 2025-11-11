@@ -7,9 +7,7 @@ const { upload } = require("../middleware/prestamoMiddleware")
 router.get("/", prestamoController.listaPrestamos)
 //Crear -> Binario
 router.post("/", upload.single("letracambio"), prestamoController.crearPrestamo)
-//Leer por ID
-router.get("/:id_prestamo", prestamoController.listaPrestamosporId)
-//Actualizar -> Binario
-router.put("/:id_prestamo", upload.single("letracambio"), prestamoController.actualizarPrestamo)
+//Leer por Cliente
+router.get("/cliente/:id_cliente", prestamoController.listaPrestamosPorCliente)
 
 module.exports = router
