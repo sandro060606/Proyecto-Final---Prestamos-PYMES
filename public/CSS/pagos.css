@@ -1,0 +1,22 @@
+body {
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.container {
+  padding-top: 20px;
+  padding-bottom: 50px;
+}
+
+h1.text-primary {
+  font-weight: 700;
+}
+
+.table-responsive {
+  margin-top: 30px;
+}
+
+.btn-evidencia {
+  font-size: 0.85rem;
+  padding: 0.25rem 0.5rem;
+}

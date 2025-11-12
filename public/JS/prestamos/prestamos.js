@@ -44,7 +44,9 @@ function calcularPagoTotal() {
 function VerPdf(prestamo) {
   if (prestamo.letracambio) {
     //Construye la URL para el PDF usando la ruta relativa guardada en DB
-    const urlPDF = prestamo.letracambio.startsWith("/")  ? `http://localhost:3000${prestamo.letracambio}`  : prestamo.letracambio;
+    const urlPDF = prestamo.letracambio.startsWith("/")
+      ? `http://localhost:3000${prestamo.letracambio}`
+      : prestamo.letracambio;
     window.open(urlPDF, "_blank");
   }
 }
@@ -62,8 +64,12 @@ async function cargarHistorialCliente(idCliente) {
         const row = tabla.insertRow();
         row.insertCell().textContent = prestamo.id_prestamo;
         row.insertCell().textContent = parseFloat(prestamo.prestamo).toFixed(2);
-        row.insertCell().textContent = parseFloat(prestamo.pagototal).toFixed(2 );
-        row.insertCell().textContent = prestamo.fechaprestamo  ? new Date(prestamo.fechaprestamo).toLocaleDateString("es-PE")  : "N/A";
+        row.insertCell().textContent = parseFloat(prestamo.pagototal).toFixed(
+          2
+        );
+        row.insertCell().textContent = prestamo.fechaprestamo
+          ? new Date(prestamo.fechaprestamo).toLocaleDateString("es-PE")
+          : "N/A";
         row.insertCell().textContent = prestamo.estado;
         const actionCell = row.insertCell();
 
@@ -129,7 +135,9 @@ formulario.addEventListener("submit", async (event) => {
     formData.append("estado", estadoprestamo.value);
 
     const archivoPDF = document.getElementById("letracambio").files[0];
-    if (archivoPDF) { formData.append("letracambio", archivoPDF) }
+    if (archivoPDF) {
+      formData.append("letracambio", archivoPDF);
+    }
 
     try {
       const response = await fetch(API_URL_PRESTAMOS, {
@@ -153,11 +161,14 @@ formulario.addEventListener("submit", async (event) => {
 prestamo.addEventListener("input", calcularPagoTotal);
 
 listaClientes.addEventListener("change", (cliente) => {
-  //Se Usa 'cliente.target.value' para obtener el ID del cliente seleccionado 
+  //Se Usa 'cliente.target.value' para obtener el ID del cliente seleccionado
   const idCliente = cliente.target.value;
-  if (idCliente) {
-    cargarHistorialCliente(idCliente);
-  }
+  if (!idCliente || idCliente === "Seleccione un cliente") {
+    // Si no hay ID válido, limpia la tabla.
+    tabla.innerHTML = "";
+    return;
+  }
+  cargarHistorialCliente(idCliente);
 });
 
 document.addEventListener("DOMContentLoaded", () => {

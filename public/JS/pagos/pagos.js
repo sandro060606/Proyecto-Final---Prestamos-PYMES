@@ -1,117 +1,111 @@
-const API_URL = 'http://localhost:3000/api/pagos';  
-const guardarBtn = document.getElementById('guardarBtn');
-const cancelarBtn = document.getElementById('cancelarBtn');
-const clienteSelect = document.getElementById('clienteSelect');
-const prestamoSelect = document.getElementById('prestamoSelect');
-const montoPagadoInput = document.getElementById('montoPagado');
-const montoRestanteInput = document.getElementById('montoRestante');
-const tipoPagoInput = document.getElementById('tipoPago');
-const fechaPagoInput = document.getElementById('fechaPago');
-const evidenciaInput = document.getElementById('evidenciaInput');
-const resultadosTabla = document.getElementById('resultadosTabla');
+const API_BASE_URL = "http://localhost:3000/api/pagos";
+const API_URL_CLIENTES = `${API_BASE_URL}/clientes`; //Lista de Clientes
+const API_URL_PRESTAMO_SALDO = `${API_BASE_URL}/prestamos/vigente`; // si Prestamo es Vigente mas Saldo Actual (Deuda)
+// REFERENCIAS DEL DOM
+const formulario = document.getElementById("formPago");
+const listaClientes = document.getElementById("lista_clientes");
+const idPrestamo = document.getElementById("id_prestamo");
+const montoTotalPrestamo = document.getElementById("montoTotalPrestamo"); // Muestra la Deuda
+const montopagado = document.getElementById("montopagado"); // Monto a Pagar
+const deuda_anterior = document.getElementById("deuda_anterior"); // Almacena el valor NUMÉRICO de la deuda
 
-// Función para obtener todos los pagos registrados
-async function obtenerPagos() {
-  try {
-    const response = await fetch(API_URL);
-    if (!response.ok) {
-      throw new Error('Error al obtener los pagos');
-    }
+//Cargar Deuda
+async function cargarDeudaAlSeleccionarCliente(idCliente) {
+  // 1. Resetear y limpiar campos
+  idPrestamo.value = "";
+  deuda_anterior.value = "0.00";
+  montopagado.value = "";
+  montopagado.disabled = true;
+  montoTotalPrestamo.textContent = "0.00";
 
-    const pagos = await response.json();
-    mostrarPagos(pagos);
-  } catch (error) {
-    console.error('Error al obtener los pagos:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Hubo un problema al cargar los pagos.'
-    });
-  }
-}
-
-// Función para mostrar los pagos en la tabla
-function mostrarPagos(pagos) {
-  resultadosTabla.innerHTML = ''; // Limpiar la tabla antes de mostrar los nuevos pagos
-
-  pagos.forEach(pago => {
-    const row = document.createElement('tr');
-    row.innerHTML = `
-      <td>${pago.cliente}</td>
-      <td>${pago.numeroPrestamo}</td>
-      <td>${pago.fecha}</td>
-      <td>${pago.tipoPago}</td>
-      <td>${pago.montoPagado}</td>
-      <td>${pago.montoRestante}</td>
-      <td>${pago.estado}</td>
-      <td><a href="${pago.evidencia}" target="_blank">${pago.evidencia}</a></td>
-      <td>
-        <button class="btn btn-primary btn-sm">Editar</button>
-        <button class="btn btn-danger btn-sm">Eliminar</button>
-      </td>
-    `;
-    resultadosTabla.appendChild(row);
-  });
-}
-
-// Función para registrar un nuevo pago
-async function registrarPago() {
-  const nuevoPago = {
-    cliente: clienteSelect.value,
-    numeroPrestamo: prestamoSelect.value,
-    montoPagado: montoPagadoInput.value,
-    montoRestante: montoRestanteInput.value,
-    tipoPago: tipoPagoInput.value,
-    fecha: fechaPagoInput.value,
-    evidencia: evidenciaInput.files[0]?.name || '', // Si hay archivo seleccionado
-  };
+  if (!idCliente){ return;}
 
   try {
-    const response = await fetch(API_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(nuevoPago)
-    });
-
-    if (!response.ok) {
-      throw new Error('Error al registrar el pago');
-    }
-
+    const response = await fetch(`${API_URL_PRESTAMO_SALDO}/${idCliente}`);
     const data = await response.json();
-    Swal.fire({
-      icon: 'success',
-      title: 'Pago Registrado',
-      text: 'El pago se registró correctamente.'
-    });
+    if (!data || !data.id_prestamo) {
+      alert("El cliente no tiene Prestamo Activo (Vigente)");
+      return;
+    }
 
-    // Volver a cargar la lista de pagos después de registrar
-    obtenerPagos();
-  } catch (error) {
-    console.error('Error al registrar el pago:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Hubo un problema al registrar el pago.'
-    });
+    const saldoActual = parseFloat(data.saldo_pendiente);
+
+    idPrestamo.value = data.id_prestamo;
+    deuda_anterior.value = saldoActual
+    if (saldoActual > 0.00) {
+      montoTotalPrestamo.textContent = `${saldoActual.toFixed(2)}`;
+      montopagado.disabled = false;
+      montopagado.setAttribute("max", saldoActual.toFixed(2));
+      montopagado.placeholder = `Máximo: ${saldoActual.toFixed(2)}`;
+    } else {
+      montoTotalPrestamo.textContent = ". 0.00 (DEUDA SALDADA)";
+      montopagado.disabled = true;
+      montopagado.placeholder = "Deuda ya saldada.";
+    }
+  } catch (e) {
+    console.error(e);
   }
 }
 
-// Función para limpiar los campos del formulario
-function limpiarFormulario() {
-  clienteSelect.value = '';
-  prestamoSelect.value = '';
-  montoPagadoInput.value = '';
-  montoRestanteInput.value = '';
-  tipoPagoInput.value = '';
-  fechaPagoInput.value = '';
-  evidenciaInput.value = '';
+// Cargar Clientes
+async function obtenerClientes() {
+  try {
+    const response = await fetch(API_URL_CLIENTES);
+    const clientes = await response.json();
+    clientes.forEach((item) => {
+      const tagOption = document.createElement("option");
+      tagOption.value = item.id_cliente;
+      tagOption.innerHTML = `${item.nombre_completo}`;
+      listaClientes.appendChild(tagOption);
+    });
+  } catch (e) {
+    console.error(e);
+  }
 }
 
-// Agregar eventos para los botones
-guardarBtn.addEventListener('click', registrarPago);
-cancelarBtn.addEventListener('click', limpiarFormulario);
+// Enviar Pago
+formulario.addEventListener("submit", async (event) => {
+  event.preventDefault();
 
-// Llamar a la función para obtener los pagos cuando la página esté cargada
-document.addEventListener('DOMContentLoaded', obtenerPagos);
+  const montoAmortizar = parseFloat(montopagado.value);
+  const saldoActual = parseFloat(deuda_anterior.value);
+
+  if (montoAmortizar <= 0 || isNaN(montoAmortizar)) {
+    alert("El monto a amortizar debe ser positivo.");
+    return;
+  }
+
+  const formData = new FormData(formulario);
+  formData.delete("id_cliente");
+  formData.delete("deuda_anterior");
+
+  // Envío de datos
+  try {
+    const response = await fetch(API_BASE_URL, {
+      method: "POST",
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (response.ok) {
+      alert(
+        `Pago registrado. Nuevo saldo: S/. ${parseFloat(
+          result.nuevo_saldo
+        ).toFixed(2)}`
+      );
+      formulario.reset();
+      cargarDeudaAlSeleccionarCliente(listaClientes.value);
+    }
+  } catch (e) {
+    console.error(e);
+  }
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  obtenerClientes();
+  listaClientes.addEventListener("change", (e) => {
+    const idCliente = e.target.value;
+    cargarDeudaAlSeleccionarCliente(idCliente);
+  });
+});

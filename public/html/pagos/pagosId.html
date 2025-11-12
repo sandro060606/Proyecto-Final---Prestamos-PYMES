@@ -4,9 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Búsqueda de Pagos</title>
-    <!-- Estilos propios -->
-    <link rel="stylesheet" href="CSS/index.css" />
-    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="/CSS/pagos.css" />
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -18,102 +16,98 @@
       integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
       crossorigin="anonymous"
     ></script>
-    <!-- Iconos Font Awesome -->
-    <link
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
-      referrerpolicy="no-referrer"
-    />
   </head>
-  <body class="bg-light">
-    <!-- Navegación principal -->
+  <body>
     <header>
       <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-          <a class="navbar-brand d-flex align-items-center" href="/">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="/">
             <img
-              src="images/logo_pymes.jpg"
-              alt="Logo de Préstamos Pymes"
-              width="32"
-              height="32"
-              class="me-2 rounded"
+              src="/images/logo_pymes.jpg"
+              alt="Logo Pymes"
+              width="30"
+              height="24"
+              class="d-inline-block align-text-top"
             />
-            <span class="fw-semibold">Préstamos Pymes</span>
+            <span style="font-size: 1.25rem"> Préstamos Pymes</span>
           </a>
+
+          <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+            <div class="navbar-nav ms-auto">
+              <a class="nav-link" href="/">Home</a>
+              <a class="nav-link" href="/pagos"
+                >Gestion Pagos</a
+              >
+              <a class="nav-link active" aria-current="page" href="/pagos/pagosListaId">Lista de Pagos</a>
+            </div>
+          </div>
         </div>
       </nav>
     </header>
 
-    <main class="container py-5">
-      <h2 class="text-center mb-4">Búsqueda de Pagos por N° de Préstamo</h2>
+    <div class="container mt-4">
+      <h1 class="text-center mb-4 text-primary">
+        Búsqueda de Pagos por N° de Préstamo
+      </h1>
 
-      <!-- Formulario de búsqueda -->
-      <div class="row mb-5">
-        <div class="col-12 col-md-6 mx-auto">
-          <div class="input-group">
-            <span class="input-group-text" id="prestamoIdLabel">N° de Préstamo</span>
+      <div class="card p-4 mb-4">
+        <form id="formBusqueda" class="row g-3 align-items-end">
+          <div class="col-10">
+            <label for="idPrestamo" class="form-label">N° de Préstamo</label>
             <input
-              type="text"
+              type="number"
               class="form-control"
-              id="prestamoId"
+              id="idPrestamo"
               placeholder="N° de Préstamo"
-              aria-label="N° de Préstamo"
-              aria-describedby="prestamoIdLabel"
             />
-            <button class="btn btn-primary" id="buscarBtn">Buscar</button>
-            <button class="btn btn-secondary" id="cancelarBtn">Cancelar</button>
           </div>
-        </div>
+          <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Buscar</button>
+          </div>
+          <div class="col-auto">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              id="btnCancelarBusqueda"
+            >
+              Cancelar
+            </button>
+          </div>
+        </form>
       </div>
 
-      <!-- Tabla de resultados -->
       <div class="table-responsive">
-        <table class="table table-striped table-bordered">
+        <h3 class="mt-5 mb-3 text-muted">Resultados de Pagos</h3>
+        <table class="table table-striped table-hover">
           <thead>
             <tr>
               <th>Cliente</th>
               <th>N° Pago</th>
               <th>Fecha</th>
               <th>Tipo de Pago</th>
+              <th>Monto Total</th>
               <th>Monto Pagado</th>
               <th>Monto Restante</th>
               <th>Estado</th>
               <th>Archivo Evidencia</th>
             </tr>
           </thead>
-          <tbody id="resultadosBusqueda">
-            <!-- Los datos se llenarán dinámicamente aquí -->
-          </tbody>
+          <tbody id="tablaPagos"></tbody>
         </table>
       </div>
-    </main>
-
-    <footer class="bg-dark text-white-50 py-3 mt-auto">
-      <div class="container d-flex justify-content-between align-items-center gap-2">
-        <span>&copy; <span id="currentYear"></span> Préstamos Pymes</span>
-        <span class="small">Panel de gestión para pequeñas y medianas empresas.</span>
-      </div>
-    </footer>
-
-    <!-- Bootstrap JS -->
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
-
-    <!-- Librería de confeti -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.3/dist/confetti.browser.min.js"></script>
-
-    <!-- SweetAlert2 -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-    <!-- Lógica específica de la búsqueda de pagos -->
-    <script src="JS/pagosId.js"></script>
-
-    <script>
-      // Mantiene el año del footer siempre actualizado.
-      document.getElementById("currentYear").textContent = new Date().getFullYear();
-    </script>
+    </div>
+    <script src="/JS/pagos/pagosId.js"></script>
   </body>
 </html>
