@@ -19,10 +19,10 @@ async function obtenerPrestamos() {
 
     row.insertCell().textContent = prestamo.Numero_Prestamo;
     row.insertCell().textContent = prestamo.cliente;
-    row.insertCell().textContent = prestamo.cliente_dni;
+    row.insertCell().textContent = prestamo.numerodocumento;
     row.insertCell().textContent = prestamo.prestamo;
     row.insertCell().textContent = prestamo.pagototal;
-    row.insertCell().textContent = prestamo.fechapago && new Date(prestamo.fechaprestamo).toLocaleDateString("es-PE");
+    row.insertCell().textContent = prestamo.fechaprestamo && new Date(prestamo.fechaprestamo).toLocaleDateString("es-PE");
     row.insertCell().textContent = prestamo.estado;
     //Boton PDF
     const pdfCell = row.insertCell();

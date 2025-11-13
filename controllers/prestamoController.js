@@ -4,7 +4,7 @@ const db = require("../config/db");
 //Listar Todos los Prestamos
 exports.listaPrestamos = async (req, res) => {
   //Consulta SQL (Join Obtener datos del Cliente)
-  const sql =  "SELECT CONCAT(cli.nombre, ' ', cli.apellido) AS cliente, cli.numerodocumento AS cliente_dni, pre.id_prestamo AS Numero_Prestamo, pre.prestamo, pre.pagototal, pre.fechaprestamo, pre.estado, pre.letracambio FROM clientes cli INNER JOIN prestamos pre ON cli.id_cliente = pre.id_cliente";
+  const sql =  "SELECT CONCAT(cli.nombre, ' ', cli.apellido) AS cliente, cli.numerodocumento, pre.id_prestamo AS Numero_Prestamo, pre.prestamo, pre.pagototal, pre.fechaprestamo, pre.estado, pre.letracambio FROM clientes cli INNER JOIN prestamos pre ON cli.id_cliente = pre.id_cliente";
   try {
     //Ejecutar la Consulta
     const [prestamos] = await db.query(sql);
@@ -18,7 +18,7 @@ exports.listaPrestamos = async (req, res) => {
 //Crear Nuevo Prestamo
 exports.crearPrestamo = async (req, res) => {
     //Extraccion de Datos
-    const {  prestamo,  fechaprestamo,  estado,  id_cliente,  } = req.body;
+    const {prestamo,  fechaprestamo,  estado,  id_cliente} = req.body;
     //Obtencion de la ruta del Archivo y (Multer)
     const letracambio = req.file ? `/uploads/prestamos/${req.file.filename}` : null;
     //Calcula el interes

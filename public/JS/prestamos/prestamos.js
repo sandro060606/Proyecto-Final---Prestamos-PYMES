@@ -73,6 +73,7 @@ async function cargarHistorialCliente(idCliente) {
         buttonpdf.textContent = "Ver PDF";
         buttonpdf.classList.add("btn", "btn-secondary", "btn-sm");
         actionCell.appendChild(buttonpdf);
+        buttonpdf.target = "_blank";
         buttonpdf.href = prestamo.letracambio;
       });
     }
@@ -132,10 +133,7 @@ formulario.addEventListener("submit", async (event) => {
     formData.append("fechaprestamo", fechaprestamo.value);
     formData.append("estado", estadoprestamo.value);
 
-    const archivoPDF = document.getElementById("letracambio").files[0];
-    if (archivoPDF) {
-      formData.append("letracambio", archivoPDF);
-    }
+    formData.append("letracambio", document.getElementById("letracambio").files[0]);
 
     try {
       //Peticion

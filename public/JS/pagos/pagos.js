@@ -7,7 +7,9 @@ const formulario = document.getElementById("formPago");
 const listaClientes = document.getElementById("lista_clientes");
 const idPrestamo = document.getElementById("id_prestamo");
 const montoTotalPrestamo = document.getElementById("montoTotalPrestamo"); // Muestra la Deuda
+const tipoPagoElemento = document.getElementById("tipopago");
 const montopagado = document.getElementById("montopagado"); // Monto a Pagar
+const fechaPago = document.getElementById("fechapago");
 const deuda_anterior = document.getElementById("deuda_anterior"); // Almacena el valor NUMÉRICO de la deuda
 
 //Cargar Deuda
@@ -19,7 +21,9 @@ async function cargarDeudaAlSeleccionarCliente(idCliente) {
   montopagado.disabled = true;
   montoTotalPrestamo.textContent = "0.00";
 
-  if (!idCliente){ return;}
+  if (!idCliente) {
+    return;
+  }
 
   try {
     //Peticion
@@ -32,16 +36,16 @@ async function cargarDeudaAlSeleccionarCliente(idCliente) {
         title: "Sin Deuda Activa",
         text: "El cliente no tiene Prestamo Activo (Vigente)",
         icon: "info",
-        confirmButtonText: "Entendido"
-    });
+        confirmButtonText: "Entendido",
+      });
       return;
     }
     //Obtiene el Valor Restante a Pagar
     const saldoActual = parseFloat(data.saldo_pendiente);
     //Se Actualiza los campos con la info del préstamo
     idPrestamo.value = data.id_prestamo;
-    deuda_anterior.value = saldoActual
-    if (saldoActual > 0.00) {
+    deuda_anterior.value = saldoActual;
+    if (saldoActual > 0.0) {
       montoTotalPrestamo.textContent = `${saldoActual.toFixed(2)}`;
       montopagado.disabled = false;
       // Limita el máximo valor de pago al saldo restante
@@ -87,12 +91,15 @@ formulario.addEventListener("submit", async (event) => {
     alert("El monto a amortizar debe ser positivo.");
     return;
   }
-  //Se obtienen todos los Valores del Formulario (Mas Sencillo)
-  const formData = new FormData(formulario);
+  //Se obtienen todos los Valores del Formulario ();
+  const formData = new FormData();
 
-  // Eliminamos campos innecesarios
-  formData.delete("id_cliente");
-  formData.delete("deuda_anterior");
+  //Datos requeridos para el registro de la tabla 'pagos'
+  formData.append("id_prestamo", idPrestamo.value);
+  formData.append("fechapago", fechaPago.value);
+  formData.append("tipopago", tipoPagoElemento.value);
+  formData.append("montopagado", montopagado.value);
+  formData.append("evidencia", document.getElementById("evidencia").files[0]);
 
   // Envío de datos
   try {
@@ -105,11 +112,14 @@ formulario.addEventListener("submit", async (event) => {
     const result = await response.json();
 
     if (response.ok) {
-      alert(
-        `Pago registrado. Nuevo saldo: S/. ${parseFloat(
-          result.nuevo_saldo
-        ).toFixed(2)}`
-      );
+      Swal.fire({
+        title: "¡Pago Registrado!",
+        html: `Nuevo saldo: **S/. ${parseFloat(result.nuevo_saldo).toFixed(
+          2
+        )}**`,
+        icon: "success",
+        confirmButtonText: "Aceptar",
+      });
       formulario.reset();
       //Recarga Deuda al Cliente
       cargarDeudaAlSeleccionarCliente(listaClientes.value);
