@@ -1,6 +1,7 @@
+//URL API
 const API_BASE_URL = "http://localhost:3000/api/pagos";
-const API_URL_CLIENTES = `${API_BASE_URL}/clientes`; //Lista de Clientes
-const API_URL_PRESTAMO_SALDO = `${API_BASE_URL}/prestamos/vigente`; // si Prestamo es Vigente mas Saldo Actual (Deuda)
+const API_URL_CLIENTES = "http://localhost:3000/api/clientes";
+const API_URL_PRESTAMO_SALDO = `${API_BASE_URL}/prestamovigente`; // si Prestamo es Vigente + Saldo Actual (Deuda)
 // REFERENCIAS DEL DOM
 const formulario = document.getElementById("formPago");
 const listaClientes = document.getElementById("lista_clientes");
@@ -21,23 +22,33 @@ async function cargarDeudaAlSeleccionarCliente(idCliente) {
   if (!idCliente){ return;}
 
   try {
+    //Peticion
     const response = await fetch(`${API_URL_PRESTAMO_SALDO}/${idCliente}`);
+    //Respuesta
     const data = await response.json();
+    //Si esta Vacio o Si no Tiene el IdPrestamo
     if (!data || !data.id_prestamo) {
-      alert("El cliente no tiene Prestamo Activo (Vigente)");
+      Swal.fire({
+        title: "Sin Deuda Activa",
+        text: "El cliente no tiene Prestamo Activo (Vigente)",
+        icon: "info",
+        confirmButtonText: "Entendido"
+    });
       return;
     }
-
+    //Obtiene el Valor Restante a Pagar
     const saldoActual = parseFloat(data.saldo_pendiente);
-
+    //Se Actualiza los campos con la info del préstamo
     idPrestamo.value = data.id_prestamo;
     deuda_anterior.value = saldoActual
     if (saldoActual > 0.00) {
       montoTotalPrestamo.textContent = `${saldoActual.toFixed(2)}`;
       montopagado.disabled = false;
+      // Limita el máximo valor de pago al saldo restante
       montopagado.setAttribute("max", saldoActual.toFixed(2));
       montopagado.placeholder = `Máximo: ${saldoActual.toFixed(2)}`;
     } else {
+      //Deuda 0
       montoTotalPrestamo.textContent = ". 0.00 (DEUDA SALDADA)";
       montopagado.disabled = true;
       montopagado.placeholder = "Deuda ya saldada.";
@@ -47,15 +58,18 @@ async function cargarDeudaAlSeleccionarCliente(idCliente) {
   }
 }
 
-// Cargar Clientes
+// Lista Clientes
 async function obtenerClientes() {
   try {
+    //Peticion
     const response = await fetch(API_URL_CLIENTES);
+    //Respuesta
     const clientes = await response.json();
+    //Carga los Clientes
     clientes.forEach((item) => {
       const tagOption = document.createElement("option");
       tagOption.value = item.id_cliente;
-      tagOption.innerHTML = `${item.nombre_completo}`;
+      tagOption.innerHTML = item.nombre + " " + item.apellido;
       listaClientes.appendChild(tagOption);
     });
   } catch (e) {
@@ -68,24 +82,26 @@ formulario.addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const montoAmortizar = parseFloat(montopagado.value);
-  const saldoActual = parseFloat(deuda_anterior.value);
-
-  if (montoAmortizar <= 0 || isNaN(montoAmortizar)) {
+  //Validacion
+  if (montoAmortizar <= 0) {
     alert("El monto a amortizar debe ser positivo.");
     return;
   }
-
+  //Se obtienen todos los Valores del Formulario (Mas Sencillo)
   const formData = new FormData(formulario);
+
+  // Eliminamos campos innecesarios
   formData.delete("id_cliente");
   formData.delete("deuda_anterior");
 
   // Envío de datos
   try {
+    //Peticion
     const response = await fetch(API_BASE_URL, {
       method: "POST",
       body: formData,
     });
-
+    //Respuesta
     const result = await response.json();
 
     if (response.ok) {
@@ -95,6 +111,7 @@ formulario.addEventListener("submit", async (event) => {
         ).toFixed(2)}`
       );
       formulario.reset();
+      //Recarga Deuda al Cliente
       cargarDeudaAlSeleccionarCliente(listaClientes.value);
     }
   } catch (e) {
@@ -104,8 +121,9 @@ formulario.addEventListener("submit", async (event) => {
 
 document.addEventListener("DOMContentLoaded", () => {
   obtenerClientes();
-  listaClientes.addEventListener("change", (e) => {
-    const idCliente = e.target.value;
+  //Evento Cambio el Select Clientes
+  listaClientes.addEventListener("change", (event) => {
+    const idCliente = event.target.value;
     cargarDeudaAlSeleccionarCliente(idCliente);
   });
 });

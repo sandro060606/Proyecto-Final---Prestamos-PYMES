@@ -1,3 +1,4 @@
+//URL API
 const API_URL_CLIENTES = "http://localhost:3000/api/clientes";
 const API_URL_PRESTAMOS = "http://localhost:3000/api/prestamos";
 //Referencias a elementos del DOM
@@ -11,13 +12,16 @@ const pagototal = document.getElementById("pagototal");
 const fechaprestamo = document.getElementById("fechaprestamo");
 const estadoprestamo = document.getElementById("estadoprestamo");
 
-const historialClienteDiv = document.getElementById("historialCliente");
 const btnGuardar = document.getElementById("btnGuardar");
 
+//Obtener Lista Clientes
 async function obtenerClientes() {
   try {
+    //Peticion
     const response = await fetch(API_URL_CLIENTES, { method: "get" });
+    //Respuesta
     const clientes = await response.json();
+    //Iteraccion Llenar el Select
     clientes.forEach((item) => {
       const tagOption = document.createElement("option");
       tagOption.value = item.id_cliente;
@@ -29,6 +33,7 @@ async function obtenerClientes() {
   }
 }
 
+//Calcular el Monto Total a Pagar (Vista)
 function calcularPagoTotal() {
   //Calculo del Monto total con el Interes 10%
   const monto = parseFloat(prestamo.value);
@@ -41,44 +46,34 @@ function calcularPagoTotal() {
   pagototal.value = totalPagar.toFixed(2);
 }
 
-function VerPdf(prestamo) {
-  if (prestamo.letracambio) {
-    //Construye la URL para el PDF usando la ruta relativa guardada en DB
-    const urlPDF = prestamo.letracambio.startsWith("/")
-      ? `http://localhost:3000${prestamo.letracambio}`
-      : prestamo.letracambio;
-    window.open(urlPDF, "_blank");
-  }
-}
-
+//Cargar Historial del Prestamo
 async function cargarHistorialCliente(idCliente) {
   try {
+    //Peticion
     const response = await fetch(`${API_URL_PRESTAMOS}/cliente/${idCliente}`, {
       method: "GET",
     });
+    //Respuesta
     const historial = await response.json();
     tabla.innerHTML = "";
-
-    if (Array.isArray(historial) && historial.length !== 0) {
+    // Validacion: (Si Obtiene un Array o un Objeto)
+    if (Array.isArray(historial)) {
       historial.forEach((prestamo) => {
         const row = tabla.insertRow();
         row.insertCell().textContent = prestamo.id_prestamo;
         row.insertCell().textContent = parseFloat(prestamo.prestamo).toFixed(2);
-        row.insertCell().textContent = parseFloat(prestamo.pagototal).toFixed(
-          2
-        );
-        row.insertCell().textContent = prestamo.fechaprestamo
-          ? new Date(prestamo.fechaprestamo).toLocaleDateString("es-PE")
-          : "N/A";
+        row.insertCell().textContent = parseFloat(prestamo.pagototal).toFixed( 2);
+        row.insertCell().textContent = prestamo.fechaprestamo  && new Date(prestamo.fechaprestamo).toLocaleDateString("es-PE")
         row.insertCell().textContent = prestamo.estado;
+
+        //Boton PDF
         const actionCell = row.insertCell();
 
-        const buttonpdf = document.createElement("button");
+        const buttonpdf = document.createElement("a");
         buttonpdf.textContent = "Ver PDF";
         buttonpdf.classList.add("btn", "btn-secondary", "btn-sm");
         actionCell.appendChild(buttonpdf);
-        //Se usa una función flecha para pasar el objeto 'prestamo' a VerPdf al hacer clic
-        buttonpdf.onclick = () => VerPdf(prestamo);
+        buttonpdf.href = prestamo.letracambio;
       });
     }
   } catch (e) {
@@ -88,19 +83,21 @@ async function cargarHistorialCliente(idCliente) {
 
 formulario.addEventListener("submit", async (event) => {
   event.preventDefault();
+  //Asiga el Id del Cliente Seleccionado
   const idClienteSeleccionado = listaClientes.value;
   try {
+    //Peticion
     const response = await fetch(
       `${API_URL_PRESTAMOS}/cliente/${idClienteSeleccionado}`,
       { method: "GET" }
     );
-
+    //Respuesta
     const historial = await response.json();
     //Se Usa .some() para verificar si al menos un registro tiene estado 'vigente'
     const tienePrestamoVigente = historial.some(
       (p) => p.estado.toLowerCase() === "vigente"
     );
-
+    //Mensaje
     if (tienePrestamoVigente) {
       Swal.fire({
         icon: "warning",
@@ -128,6 +125,7 @@ formulario.addEventListener("submit", async (event) => {
 
   //Se ejecuta el POST solo si el usuario confirma (isConfirmed)
   if (confirmacion.isConfirmed) {
+    //Datos del Formulario
     const formData = new FormData();
     formData.append("id_cliente", idClienteSeleccionado);
     formData.append("prestamo", prestamo.value);
@@ -140,12 +138,14 @@ formulario.addEventListener("submit", async (event) => {
     }
 
     try {
+      //Peticion
       const response = await fetch(API_URL_PRESTAMOS, {
         method: "POST",
         body: formData,
       });
-
+      //Respuesta
       const result = await response.json();
+      //Exito
       if (response.ok) {
         Swal.fire("¡Registrado!", result.message, "success");
         formulario.reset();
@@ -158,12 +158,13 @@ formulario.addEventListener("submit", async (event) => {
   }
 });
 
+//Cambiar Monto Se Recalcula el Pago
 prestamo.addEventListener("input", calcularPagoTotal);
-
+//si se Cambia el Cliente Seleccionado
 listaClientes.addEventListener("change", (cliente) => {
   //Se Usa 'cliente.target.value' para obtener el ID del cliente seleccionado
   const idCliente = cliente.target.value;
-  if (!idCliente || idCliente === "Seleccione un cliente") {
+  if (!idCliente) {
     // Si no hay ID válido, limpia la tabla.
     tabla.innerHTML = "";
     return;
@@ -171,6 +172,7 @@ listaClientes.addEventListener("change", (cliente) => {
   cargarHistorialCliente(idCliente);
 });
 
+//Cargar Clientes y Calcular el Pago Total Incial
 document.addEventListener("DOMContentLoaded", () => {
   obtenerClientes();
   calcularPagoTotal();

@@ -2,10 +2,10 @@
 //Acceder al archivo .env
 require('dotenv').config()
 
-//Administrar la BD (promesa = proceso en curso...)
+//Importa el módulo 'mysql2' configurado para usar Promesas
 const mysql = require('mysql2/promise')
 
-//Pool de conexiones = acceso
+//Pool de conexiones = acceso (Mejorar Rendimiento)
 const pool = mysql.createPool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,

@@ -1,7 +1,10 @@
+//Importar Express
 const express = require('express');
+//Importar Cors (Peticiones)
 const cors = require('cors')
+//Importar Path
 const path = require('path');
-
+//Promesas
 const fs = require('fs').promises
 
 //Enrutadores
@@ -15,19 +18,20 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 //*** CONFIGURACION ***
-//Actualización - Permisos cors
+//Permisos cors
 app.use(cors({
   origin: '*',
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   credentials: true
 }))
 
+//Creacion de Directorios Para Archivos
 const uploadDirPrestamos = './public/uploads/prestamos'
 fs.mkdir(uploadDirPrestamos, {recursive: true})
-
 const uploadDirPagos = './public/uploads/pagos'
 fs.mkdir(uploadDirPagos, {recursive: true})
 
+//Peticiones Entrantes
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({extended: true}))
@@ -55,7 +59,7 @@ app.get('/pagos/pagosListaId', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'html/pagos/pagosId.html'))
 })
 
-//Rutas
+// ***ROUTEOS > BACKEND***
 app.use('/api/index', indexRoutes);
 app.use('/api/clientes', clienteRoutes);
 app.use('/api/prestamos', prestamoRoutes);
